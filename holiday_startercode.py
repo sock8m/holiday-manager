@@ -8,11 +8,13 @@ from datetime import datetime
 from datetime import date
 from datetime import timedelta
 
-currentYear = 2022
-city = "New York City, USA"
-weatherAPIKey = "55e9611df7msh8d9a1794a95dd96p1ff35bjsn79b2ab7fe896"
-starterjsonfileloc = 'holidays.json'
-newfilelocation = "test_holiday.json"
+from config import currentYear
+from config import city
+from config import weatherAPIKey
+from config import starterjsonfileloc
+from config import newfilelocation
+from config import timeanddateURL
+from config import openweatherAPIURL
 
 # -------------------------------------------
 # Modify the holiday class to 
@@ -129,8 +131,9 @@ class HolidayList:
         # You can scrape multiple years by adding year to the timeanddate URL. 
         # For example https://www.timeanddate.com/holidays/us/2022
         global currentYear
+        global timeanddateURL
         for year in range(currentYear-2,currentYear+3):
-            url = "https://www.timeanddate.com/holidays/us/{}?hol=33554809".format(year)
+            url = timeanddateURL.format(year)
             response = requests.get(url).text
             soup = BeautifulSoup(response,'html.parser')
 
@@ -189,6 +192,7 @@ class HolidayList:
     def getWeather(self,year,weekNum):
         global city
         global weatherAPIKey
+        global openweatherAPIURL
         global currentYear
         # Convert weekNum to range between two days
         today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -202,13 +206,12 @@ class HolidayList:
             print(f"Current year: {currentYear}, Current week: {today.isocalendar()[1]}")
             return
         # Query API for weather in that week range
-        url = "https://community-open-weather-map.p.rapidapi.com/forecast/daily"
         querystring = {"q":city,"lat":"35","lon":"139","cnt":"16","units":"metric or imperial"}
         headers = {
             "X-RapidAPI-Key": weatherAPIKey,
             "X-RapidAPI-Host": "community-open-weather-map.p.rapidapi.com"
         }
-        weather = requests.request("GET", url, headers=headers, params=querystring).text
+        weather = requests.request("GET", openweatherAPIURL, headers=headers, params=querystring).text
         # Format weather information and return weather string.
         weatherDictRaw = json.loads(weather)["list"]
         weatherDictDate = {}
@@ -254,7 +257,7 @@ class HolidayList:
 # putting all the separate UI pages into function definitions:
 def StartUp():
     theList = HolidayList()
-    theList.read_json('holidays.json')
+    theList.read_json(starterjsonfileloc)
     theList.scrapeHolidays()
     totalNum = theList.numHolidays()
     print("Holiday Management")
