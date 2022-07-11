@@ -8,13 +8,14 @@ from datetime import datetime
 from datetime import date
 from datetime import timedelta
 
-from config import currentYear
-from config import city
 from config import weatherAPIKey
-from config import starterjsonfileloc
-from config import newfilelocation
-from config import timeanddateURL
-from config import openweatherAPIURL
+
+currentYear = 2022
+city = "New York City, USA"
+starterjsonfileloc = 'holidays.json'
+newfilelocation = "output_holiday.json"
+timeanddateURL = "https://www.timeanddate.com/holidays/us/{}?hol=33554809"
+openweatherAPIURL = "https://community-open-weather-map.p.rapidapi.com/forecast/daily"
 
 # -------------------------------------------
 # Modify the holiday class to 
